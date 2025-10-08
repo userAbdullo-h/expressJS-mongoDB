@@ -1,0 +1,42 @@
+<h2 class='mb-3'>Edit contacts</h2>
+
+<form action='/contact/edit/{{contact._id}}' method='post'>
+	<div class='form-floating mb-3'>
+		<input
+			type='text'
+			class='form-control'
+			id='name'
+			placeholder='enter name'
+			name='name'
+			value='{{contact.name}}'
+		/>
+		<label for='name'>Name</label>
+	</div>
+
+	<div class='form-floating mb-3'>
+		<input
+			type='email'
+			class='form-control'
+			id='email'
+			placeholder='name@example.com'
+			name='email'
+			value='{{contact.email}}'
+		/>
+		<label for='email'>Email address</label>
+	</div>
+
+	<div class='form-floating mb-3'>
+		<input
+			type='text'
+			class='form-control'
+			id='mobile'
+			placeholder='name@example.com'
+			name='mobile'
+			value='{{contact.mobile}}'
+		/>
+		<label for='mobile'>Mobile number</label>
+	</div>
+
+	<a href='/' class='btn btn-secondary'>Back</a>
+	<button type='submit' class='btn btn-success'>Edit</button>
+</form>
