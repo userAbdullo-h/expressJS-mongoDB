@@ -7,6 +7,9 @@ const app = express()
 const session = require('express-session')
 const moongoose = require('mongoose')
 const userModel = require('./models/user.model')
+const cookieParser = require('cookie-parser')
+const contactModel = require('./models/contact.model')
+const authMiddleware = require('./middlewares/auth.middleware')
 
 const PORT = process.env.PORT
 
@@ -18,27 +21,29 @@ app.set('views', './views')
 //Middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
 app.use(
 	session({
 		secret: process.env.SECRET_KEY,
 		resave: false,
 		saveUninitialized: true,
+		cookie: { maxAge: 90000 },
 	})
 )
 app.use((req, res, next) => {
 	res.locals.message = req.session.message
+	res.locals.user = req.session.user
 	delete req.session.message
 	next()
 })
 
 //Routes
-
-app.get('/', async (req, res) => {
+app.get('/', authMiddleware, async (req, res) => {
 	try {
-		const contacts = await userModel.find().lean()
-		console.log(contacts)
+		const user = req.session.user
+		const contacts = await contactModel.find({ user: user._id }).lean()
+		// console.log(req.session)
 
-		// const users = await User.findAll({ raw: true, include: Post })
 		res.render('home', {
 			title: 'Main page',
 			contacts,
@@ -50,6 +55,7 @@ app.get('/', async (req, res) => {
 })
 
 app.use('/contact', require('./routes/contact.route'))
+app.use('/auth', require('./routes/auth.route'))
 
 async function startApp(params) {
 	try {

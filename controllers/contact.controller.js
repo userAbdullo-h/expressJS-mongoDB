@@ -1,6 +1,5 @@
 const { validationResult } = require('express-validator')
-const { ObjectId } = require('mongodb')
-const userModel = require('../models/user.model')
+const contactModel = require('../models/contact.model')
 
 class ContactController {
 	renderAddContact(req, res) {
@@ -17,8 +16,8 @@ class ContactController {
 			return res.redirect('/contact/add')
 		}
 		try {
-			const { name, email, mobile } = req.body
-			await userModel.create(req.body)
+			const user = req.session.user
+			await contactModel.create({ ...req.body, user: user._id })
 			// await User.create({ name, email, mobile })
 			req.session.message = {
 				type: 'success',
@@ -32,7 +31,7 @@ class ContactController {
 
 	async editRenderContact(req, res) {
 		try {
-			const user = await userModel.findById(req.params.id).lean()
+			const user = await contactModel.findById(req.params.id).lean()
 			if (!user) return res.status(404).json('Contact Not Found')
 			res.render('edit', { title: 'Edit contact', contact: user })
 		} catch (error) {
@@ -55,16 +54,12 @@ class ContactController {
 		}
 
 		try {
-			const result = await userModel.findByIdAndUpdate(req.params.id, req.body)
-
-			if (result) {
-				req.session.message = {
-					type: 'success',
-					message: 'Contact was edited successfully',
-				}
-				res.redirect('/')
+			await contactModel.findByIdAndUpdate(req.params.id, req.body)
+			req.session.message = {
+				type: 'success',
+				message: 'Contact was edited successfully',
 			}
-			res.status(404).json({ message: 'User Not Found' })
+			res.redirect('/')
 		} catch (error) {
 			res.status(500).json({ error: error.message })
 		}
@@ -72,7 +67,7 @@ class ContactController {
 
 	async deleteContact(req, res) {
 		try {
-			const deletedContact = await userModel.findOneAndDelete(req.params.id)
+			const deletedContact = await contactModel.findOneAndDelete(req.params.id)
 			// const deletedContact = await db
 			// 	.collection('users')
 			// 	.deleteOne({ _id: new ObjectId(req.params.id) })

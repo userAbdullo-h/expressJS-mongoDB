@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/userAbdullo-h/expressJs#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "express-handlebars": "^8.0.3",
