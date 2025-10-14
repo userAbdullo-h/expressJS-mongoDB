@@ -11,4 +11,6 @@ router.post('/register', authController.register)
 
 router.get('/logout', authController.logout)
 
+router.get('/verify/:verifyToken', authController.verifyToken)
+
 module.exports = router
