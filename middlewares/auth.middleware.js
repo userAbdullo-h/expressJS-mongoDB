@@ -1,9 +1,10 @@
 function authMiddleware(req, res, next) {
-	if (req.session.user) {
-		return next()
+	if (!req.session.user) {
+		req.session.message = { typpe: 'danger', message: 'Please logging in.' }
+		return res.redirect('/auth/login')
 	}
 
-	res.redirect('/auth/login')
+	return next()
 }
 
 module.exports = authMiddleware
