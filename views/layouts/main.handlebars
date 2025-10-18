@@ -2,7 +2,7 @@
 	<head>
 		<meta charset='UTF-8' />
 		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
-		<title>{{title}}</title>
+		<title>Express App | {{title}}</title>
 		<link
 			href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css'
 			rel='stylesheet'
@@ -14,18 +14,24 @@
 		{{!-- {{content}} --}}
 		<div class='container'>
 			{{#if message}}
-				<div
-					class='alert alert-{{message.type}} alert-dismissible fade show'
-					role='alert'
-				>
-					{{message.message}}
-					<button
-						type='button'
-						class='btn-close'
-						data-bs-dismiss='alert'
-						aria-label='Close'
-					></button>
+			<div class="row justify-content-center">
+				<div class="col-md-7 col-lg-6">
+					<div
+						class='alert alert-{{message.type}} alert-dismissible fade show'
+						role='alert'
+					>
+						{{message.message}}
+						<button
+							type='button'
+							class='btn-close'
+							data-bs-dismiss='alert'
+							aria-label='Close'
+						></button>
+					</div>
+					
 				</div>
+
+			</div>
 			{{/if}}
 			{{{body}}}
 		</div>

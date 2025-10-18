@@ -44,7 +44,7 @@ class AuthController {
 	}
 
 	loginBack(req, res) {
-		const user = req.session.user.name
+		const user = req.session.user.email
 
 		req.session.message = {
 			type: 'success',
@@ -82,10 +82,25 @@ class AuthController {
 			from: 'UserA',
 			to: email,
 			subject: 'Email verification! ',
-			html: ` 
-				<p>Hello ${email}</p>
-				<p>Please click the link below for verification:</p>
-				<a href='${verifyLink}'>${verifyLink}</a>
+			html: `
+				<body style="display: flex; justify-content: center; align-items: center;font-family: Helvetica,Arial,sans-serif;">
+
+			<div style="width: 500px; height: 500px;">
+				<h2 style="letter-spacing: 1px;"">E-commerce</h2>
+				<hr>
+
+				<h1 style="letter-spacing: 1px;line-height: 40px;">Verification link</h1>
+
+				<p style="font-size: 23px; letter-spacing: 0.5px; margin-bottom: 30px">Hello ${email}</p>
+		
+
+				<p style="font-size: 17px; letter-spacing: 0.5px;">Please click the link below for verification:</p>
+
+					<a style="font-size: 17px; letter-spacing: 0.5px;text-decoration: none;margin-top:20px;margin-bottom:20px;
+					" href="${verifyLink}">Verify</a>
+				<p style="font-size: 17px; letter-spacing: 0.5px;">If you didn't request this, please ignore this email for now.</p>
+			</div>
+	</body>
 			`,
 		})
 
