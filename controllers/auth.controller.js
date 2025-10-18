@@ -40,6 +40,16 @@ class AuthController {
 		}
 
 		req.session.user = user
+		res.redirect('/auth/login-back')
+	}
+
+	loginBack(req, res) {
+		const user = req.session.user.name
+
+		req.session.message = {
+			type: 'success',
+			message: `Welcome back ${user}`,
+		}
 		res.redirect('/')
 	}
 
@@ -88,8 +98,15 @@ class AuthController {
 
 	logout(req, res) {
 		req.session.destroy(() => {
-			res.redirect('/')
+			res.redirect('/auth/logged-out')
 		})
+	}
+	loggedOut(req, res) {
+		req.session.message = {
+			type: 'success',
+			message: 'Logged out successfully',
+		}
+		res.redirect('/auth/login')
 	}
 
 	async verifyToken(req, res) {
@@ -97,14 +114,21 @@ class AuthController {
 			verifyToken: req.params.verifyToken,
 		})
 		if (!user) {
-			res.send('User not found')
+			return res.render('auth/verify', {
+				success: false,
+				message: 'Invalid or expired link. Please try again',
+			})
 		}
 
 		user.isVerified = true
 		user.verifyToken = undefined
 
 		await user.save()
-		res.send('Your accaunt successfully verified!')
+		return res.render('auth/verify', {
+			success: true,
+			message:
+				'Your account has been successfully verified. Now you can login!',
+		})
 	}
 }
 
