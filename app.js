@@ -9,6 +9,8 @@ const moongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 const contactModel = require('./models/contact.model')
 const authMiddleware = require('./middlewares/auth.middleware')
+const userModel = require('./models/user.model')
+const postModel = require('./models/post.model')
 
 const PORT = process.env.PORT
 
@@ -40,10 +42,25 @@ app.use((req, res, next) => {
 app.get('/', authMiddleware, async (req, res) => {
 	try {
 		const user = req.session.user
+		const posts = await postModel.find({ user: user._id }).lean()
+		// console.log(posts)
+
+		res.render('home', {
+			title: 'Main page',
+			posts,
+			views: req.session.views,
+		})
+	} catch (error) {
+		res.status(500).json({ error: error.message })
+	}
+})
+app.get('/my-contacts', authMiddleware, async (req, res) => {
+	try {
+		const user = req.session.user
 		const contacts = await contactModel.find({ user: user._id }).lean()
 		// console.log(req.session)
 
-		res.render('home', {
+		res.render('contact/contact', {
 			title: 'Main page',
 			contacts,
 			views: req.session.views,
@@ -54,6 +71,7 @@ app.get('/', authMiddleware, async (req, res) => {
 })
 
 app.use('/contact', require('./routes/contact.route'))
+app.use('/post', authMiddleware, require('./routes/post.route'))
 app.use('/auth', require('./routes/auth.route'))
 
 async function startApp(params) {

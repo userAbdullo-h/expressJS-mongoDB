@@ -2,7 +2,6 @@ const express = require('express')
 const { contactValidationRules } = require('../helpers/validator')
 const contactController = require('../controllers/contact.controller')
 const router = express.Router()
-const userModel = require('../models/user.model')
 const authMiddleware = require('../middlewares/auth.middleware')
 
 // Add Contact

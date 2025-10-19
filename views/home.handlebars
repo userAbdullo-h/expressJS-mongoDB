@@ -1,43 +1,28 @@
-<h1 class='mb-4'>Contact List</h1>
-<a href='/contact/add' class='btn btn-primary mb-3'>New contact</a>
+<h1 class='mb-4'>All Posts</h1>
 
-{{#if contacts.length}}
-	<table class='table table-bordered'>
-		<thead class='table-light'>
-			<tr>
-				<th>Name</th>
-				<th>Email</th>
-				<th>mobile</th>
-				<th>Action</th>
-			</tr>
-		</thead>
-		<tbody>
-			{{#each contacts}}
-				<tr>
-					<td>{{this.name}}</td>
-					<td>{{this.email}}</td>
-					<td>{{this.mobile}}</td>
-					<td>
-						<a
-							href='/contact/edit/{{this._id}}'
-							class='btn btn-warning btn-sm'
-						>Edit</a>
-						<form
-							action='/contact/delete/{{this._id}}'
-							class='d-inline-block m-0'
-						>
-							<button
-								type='submit'
-								class='btn btn-danger btn-sm'
-							>Delete</button>
-						</form>
-					</td>
-				</tr>
-			{{/each}}
-		</tbody>
-	</table>
-{{else}}
-	<div class='alert alert-warning text-center' role='alert'>
-		<h2>Contacts not found</h2>
+<div class='container text-center'>
+	<div class='row'>
+		{{#each posts}}
+			<div class='card mb-3' style='max-width: 620px;'>
+				<div class='row g-0'>
+					<div class='col-md-4'>
+						<img
+							src='{{this.image}}'
+							class='img-fluid rounded-start'
+							alt='{{this.title}}'
+						/>
+					</div>
+					<div class='col-md-8'>
+						<div class='card-body overflow-y-scroll'>
+							<h5 class='card-title'>{{this.title}}</h5>
+							<p class='card-text'>{{this.description}}</p>
+							<p class='card-text'><small
+									class='text-body-secondary'
+								>{{this.createdAt}}</small></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		{{/each}}
 	</div>
-{{/if}}
+</div>

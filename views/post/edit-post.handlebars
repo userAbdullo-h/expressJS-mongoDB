@@ -1,0 +1,42 @@
+<h2 class='mb-3'>Edit post</h2>
+
+<form action='/post/edit/{{post._id}}' method='post'>
+	<div class='form-floating mb-3'>
+		<input
+			type='text'
+			class='form-control'
+			id='image'
+			placeholder='Image URL'
+			name='image'
+			value='{{post.image}}'
+		/>
+		<label for='image'>Image URL</label>
+	</div>
+
+	<div class='form-floating mb-3'>
+		<input
+			type='text'
+			class='form-control'
+			id='title'
+			placeholder='enter title'
+			name='title'
+			value='{{post.name}}'
+		/>
+		<label for='title'>Title</label>
+	</div>
+
+	<div class='form-floating mb-3'>
+		<textarea
+			class='form-control'
+			id='description'
+			placeholder='name@example.com'
+			name='description'
+			value='{{post.description}}'
+			style="height: 150px;"
+		/></textarea>
+		<label for='description'>Description</label>
+	</div>
+
+	<a href='/' class='btn btn-secondary'>Back</a>
+	<button type='submit' class='btn btn-success'>Edit</button>
+</form>
