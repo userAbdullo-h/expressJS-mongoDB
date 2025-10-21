@@ -9,13 +9,13 @@ const moongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 const contactModel = require('./models/contact.model')
 const authMiddleware = require('./middlewares/auth.middleware')
-const userModel = require('./models/user.model')
 const postModel = require('./models/post.model')
+const hbsHelper = require('./helpers/hbs')
 
 const PORT = process.env.PORT
 
 //View Engine config
-app.engine('handlebars', engine())
+app.engine('handlebars', engine({ helpers: hbsHelper }))
 app.set('view engine', 'handlebars')
 app.set('views', './views')
 
@@ -23,14 +23,7 @@ app.set('views', './views')
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(
-	session({
-		secret: process.env.SECRET_KEY,
-		resave: false,
-		saveUninitialized: true,
-		cookie: { maxAge: 90000 },
-	})
-)
+app.use(session({ secret: process.env.SECRET_KEY, resave: false, saveUninitialized: true, cookie: { maxAge: 90000 } }))
 app.use((req, res, next) => {
 	res.locals.message = req.session.message
 	res.locals.user = req.session.user
@@ -39,39 +32,17 @@ app.use((req, res, next) => {
 })
 
 //Routes
-app.get('/', authMiddleware, async (req, res) => {
+app.get('/', async (req, res) => {
 	try {
-		const user = req.session.user
-		const posts = await postModel.find({ user: user._id }).lean()
-		// console.log(posts)
-
-		res.render('home', {
-			title: 'Main page',
-			posts,
-			views: req.session.views,
-		})
-	} catch (error) {
-		res.status(500).json({ error: error.message })
-	}
-})
-app.get('/my-contacts', authMiddleware, async (req, res) => {
-	try {
-		const user = req.session.user
-		const contacts = await contactModel.find({ user: user._id }).lean()
-		// console.log(req.session)
-
-		res.render('contact/contact', {
-			title: 'Main page',
-			contacts,
-			views: req.session.views,
-		})
+		const posts = await postModel.find().lean()
+		res.render('home', { title: 'Main page', posts, views: req.session.views })
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}
 })
 
 app.use('/contact', require('./routes/contact.route'))
-app.use('/post', authMiddleware, require('./routes/post.route'))
+app.use('/admin', authMiddleware, require('./routes/admin.route'))
 app.use('/auth', require('./routes/auth.route'))
 
 async function startApp(params) {

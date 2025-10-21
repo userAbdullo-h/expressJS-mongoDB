@@ -39,12 +39,18 @@
 				<li class='nav-item'>
 					<a href='/' class='nav-link'>Home</a>
 				</li>
+				{{#if user._id}}
+					<li class='nav-item'>
+						<a href='/contact' class='nav-link'>My-contacts</a>
+					</li>
+				{{/if}}
 				<li class='nav-item'>
-					<a href='/my-contacts' class='nav-link'>My-contacts</a>
+					<a href='/admin/posts' class='nav-link'>Posts</a>
 				</li>
 				<li class='nav-item'>
-					<a href='/post/add' class='nav-link'>Create post</a>
+					<a href='/admin/add' class='nav-link'>Create post</a>
 				</li>
+
 				{{#if user._id}}
 					<li class='nav-item'>
 						<a href='/auth/logout' class='nav-link'>Logout</a>

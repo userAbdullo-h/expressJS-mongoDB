@@ -2,6 +2,13 @@ const { validationResult } = require('express-validator')
 const contactModel = require('../models/contact.model')
 
 class ContactController {
+	async renderContact(req, res) {
+		const user = req.session.user
+		const contacts = await contactModel.find({ user: user._id }).lean()
+
+		res.render('contact/contact', { title: 'My-contacts', contacts })
+	}
+
 	renderAddContact(req, res) {
 		res.render('contact/add', { title: 'Add contact' })
 	}

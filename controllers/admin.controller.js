@@ -2,7 +2,7 @@ const { validationResult } = require('express-validator')
 const contactModel = require('../models/contact.model')
 const postModel = require('../models/post.model')
 
-class PostController {
+class AdminController {
 	renderAddPost(req, res) {
 		res.render('post/add-post', { title: 'Add post' })
 	}
@@ -10,20 +10,12 @@ class PostController {
 		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
 			const messages = errors.array().map(err => err.msg)
-			req.session.message = {
-				type: 'danger',
-				message: messages.join(' | '),
-			}
+			req.session.message = { type: 'danger', message: messages.join(' | ') }
 			return res.redirect('/post/add')
 		}
 		try {
-			const user = req.session.user
-			await postModel.create({ ...req.body, user: user._id })
-			// await User.create({ name, email, mobile })
-			req.session.message = {
-				type: 'success',
-				message: 'Post was created successfully',
-			}
+			await postModel.create({ ...req.body })
+			req.session.message = { type: 'success', message: 'Post was created successfully' }
 			res.redirect('/')
 		} catch (error) {
 			res.status(500).json({ error: error.message })
@@ -47,19 +39,13 @@ class PostController {
 			const messages = errors.array().map(err => err.msg)
 			console.log(messages)
 
-			req.session.message = {
-				type: 'danger',
-				message: messages.join(' | '),
-			}
+			req.session.message = { type: 'danger', message: messages.join(' | ') }
 			return res.redirect(`/contact/edit/${id}`)
 		}
 
 		try {
 			await contactModel.findByIdAndUpdate(req.params.id, req.body)
-			req.session.message = {
-				type: 'success',
-				message: 'Contact was edited successfully',
-			}
+			req.session.message = { type: 'success', message: 'Contact was edited successfully' }
 			res.redirect('/')
 		} catch (error) {
 			res.status(500).json({ error: error.message })
@@ -73,10 +59,7 @@ class PostController {
 			// 	.collection('users')
 			// 	.deleteOne({ _id: new ObjectId(req.params.id) })
 			if (deletedContact) {
-				req.session.message = {
-					type: 'success',
-					message: 'Contact was successfully',
-				}
+				req.session.message = { type: 'success', message: 'Contact was successfully' }
 				return res.redirect('/')
 			}
 			res.status(404).json({ message: 'User Not Found' })
@@ -86,4 +69,4 @@ class PostController {
 	}
 }
 
-module.exports = new PostController()
+module.exports = new AdminController()
